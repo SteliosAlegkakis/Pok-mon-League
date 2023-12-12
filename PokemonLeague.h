@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <map>
 using namespace std;
 
 #define BEGIN_GAME int main(){
@@ -11,6 +12,8 @@ using namespace std;
 #define NAME false?"name"
 #define TYPE false?"type"
 #define HP false?0
+#define DEAR Pokemon::getPokemon(
+#define LEARN ).getName();
 
 class Pokemon
 {
@@ -18,21 +21,23 @@ private:
     std::string name;
     std::string type;
     int health_points;
-    static vector<Pokemon*> pokemons; 
+    static std::map<std::string, Pokemon*> pokemons;
+    
 public:
     Pokemon(std::string _name ,std::string _type, int _health_points);
     std::string getName() { return this->name; }
     std::string getType() { return this->type; }
     int getHealthPoints() { return this->health_points; }
-    static const std::vector<Pokemon*> &getPokemons() { return pokemons; }
+    static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
+    static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
 };
 
-std::vector<Pokemon*> Pokemon::pokemons;
+std::map<std::string, Pokemon*> Pokemon::pokemons;
 
 Pokemon::Pokemon(std::string _name ,std::string _type, int _health_points)
 {
     name = _name;
     type = _type;
     health_points = _health_points;
-    pokemons.push_back(this);
+    pokemons[_name] = this;
 }
