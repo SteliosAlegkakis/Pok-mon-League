@@ -3,6 +3,8 @@
 #include <iostream>
 #include <map>
 #include <functional>
+#include <sstream>
+
 using namespace std;
 
 #define BEGIN_GAME int main(){
@@ -14,19 +16,22 @@ using namespace std;
 #define NAME false?"name"
 #define TYPE false?"type"
 #define HP false?0
-#define DEAR Pokemon::getPokemon(
-#define LEARN ).getName();
+#define DEAR ;Pokemon::getPokemon(
+#define LEARN )
 #define ABILITY Ability
 #define ACTION false?[](Pokemon& p1, Pokemon& p2)->void{}
 #define START [](Pokemon& attacker, Pokemon& deffender)->void{
 #define END }
-#define ABILITY_NAME(ability_name) #ability_name,
+#define ABILITY_NAME(ability_name) #ability_name" "
+#define ATTACKER attacker
+#define DEFFENDER deffender
 
 class Pokemon {
 private:
     std::string name;
     std::string type;
     int health_points;
+    std::vector<std::string> abilities;
     static std::map<std::string, Pokemon*> pokemons;
 
 public:
@@ -39,8 +44,18 @@ public:
     std::string getName() { return this->name; }
     std::string getType() { return this->type; }
     int getHealthPoints() { return this->health_points; }
+    std::vector<std::string> getAbilities() { return abilities; }
     static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
     static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
+
+    void operator[](std::string _abilities){
+        std::istringstream s(_abilities);
+        std::string token;
+
+        while (s >> token) {
+             abilities.push_back(token);
+        }
+    }
 };
 
 std::map<std::string, Pokemon*> Pokemon::pokemons;
@@ -52,7 +67,7 @@ private:
     static std::map<std::string, Ability*> abilities;
 public:
     using FunctionType = std::function<void(Pokemon&, Pokemon&)>;
-    Ability(std::string _name, FunctionType _action) /*: name(_name), action(std::move(_action))*/ {
+    Ability(std::string _name, FunctionType _action) {
         name = _name;
         action = _action;
         abilities[_name] = this;
