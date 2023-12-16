@@ -31,6 +31,7 @@ private:
     std::string name;
     std::string type;
     int health_points;
+    bool inPokeball = false;
     static std::map<std::string,std::vector<std::string>> abilities;
     static std::map<std::string, Pokemon*> pokemons;
 
@@ -46,9 +47,22 @@ public:
     int getHealthPoints() { return this->health_points; }
     static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
     static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
+
+    void takeDamage(int damage_points) { health_points -= damage_points; }
+
     void printAbilities() { 
         std::vector<std::string> abs = abilities[name];
-        for(int i=0;i<abs.size();i++) cout << abs.at(i) END_LINE;
+        for(int i=0;i<abs.size();i++) cout << abs.at(i) END_LINE
+    }
+
+    void printStatus() {
+        SHOW " " END_LINE
+        SHOW "##########################" END_LINE
+        SHOW "NAME : " << name END_LINE
+        SHOW "HP : " << health_points END_LINE
+        SHOW "Pokemon " << (inPokeball?"in pokeball":"out of Pokeball") END_LINE
+        SHOW "##########################" END_LINE
+        SHOW " " END_LINE
     }
 
     void operator[](std::string _abilities){
