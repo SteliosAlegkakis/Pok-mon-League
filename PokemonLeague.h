@@ -31,7 +31,7 @@ private:
     std::string name;
     std::string type;
     int health_points;
-    std::vector<std::string> abilities;
+    static std::map<std::string,std::vector<std::string>> abilities;
     static std::map<std::string, Pokemon*> pokemons;
 
 public:
@@ -44,21 +44,26 @@ public:
     std::string getName() { return this->name; }
     std::string getType() { return this->type; }
     int getHealthPoints() { return this->health_points; }
-    std::vector<std::string> getAbilities() { return abilities; }
     static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
     static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
+    void printAbilities() { 
+        std::vector<std::string> abs = abilities[name];
+        for(int i=0;i<abs.size();i++) cout << abs.at(i) END_LINE;
+    }
 
     void operator[](std::string _abilities){
         std::istringstream s(_abilities);
         std::string token;
+        std::vector<std::string> abilities_vector;
 
-        while (s >> token) {
-             abilities.push_back(token);
-        }
+        while (s >> token) abilities_vector.push_back(token);
+
+        abilities[name] = abilities_vector;
     }
 };
 
 std::map<std::string, Pokemon*> Pokemon::pokemons;
+std::map<std::string, std::vector<std::string>> Pokemon::abilities;
 
 class Ability {
 private:
