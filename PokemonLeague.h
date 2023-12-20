@@ -52,7 +52,12 @@ public:
 
     void printAbilities() { 
         std::vector<std::string> abs = abilities[name];
+        cout END_LINE
+        SHOW name << " select ability :" END_LINE
+        SHOW "--------------------------" END_LINE
         for(int i=0;i<abs.size();i++) cout << abs.at(i) END_LINE
+        SHOW "--------------------------" END_LINE
+        cout END_LINE
     }
 
     void printStatus() {
