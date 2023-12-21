@@ -120,13 +120,15 @@ public:
 std::map<std::string, Ability*> Ability::abilities;
 
 template<typename... Args>
-bool AND(Args... args){
+bool AND(bool arg1,bool arg2,Args... args){
+    if(!arg1 || !arg2) return false;
     bool result = ((args == false) || ...);
     return !result;
 }
 
 template<typename... Args>
-bool OR(Args... args){
+bool OR(bool arg1,bool arg2,Args... args){
+    if(arg1 || arg2) return true;
     bool result = ((args == true) || ...);
     return result;
 }
