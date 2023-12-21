@@ -45,6 +45,8 @@ public:
     std::string getName() { return this->name; }
     std::string getType() { return this->type; }
     int getHealthPoints() { return this->health_points; }
+    bool isInPokeball() { return this-> inPokeball; }
+
     static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
     static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
 
@@ -83,6 +85,11 @@ public:
 
 std::map<std::string, Pokemon*> Pokemon::pokemons;
 std::map<std::string, std::vector<std::string>> Pokemon::abilities;
+
+std::string GET_NAME(Pokemon pokemon) { return pokemon.getName(); }
+std::string GET_TYPE(Pokemon pokemon) { return pokemon.getType(); }
+int GET_HP(Pokemon pokemon) { return pokemon.getHealthPoints(); }
+bool IS_IN_POKEBALL(Pokemon pokemon) { return pokemon.isInPokeball(); }
 
 class Ability {
 private:
