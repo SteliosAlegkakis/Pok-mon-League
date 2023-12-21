@@ -13,12 +13,14 @@ using namespace std;
 #define END_LINE <<"\n";
 #define CREATE ;
 #define POKEMON Pokemon
+#define POKEMONS Pokemons{}
 #define NAME false?"name"
 #define TYPE false?"type"
 #define HP false?0
 #define DEAR ;Pokemon::getPokemon(
 #define LEARN )
 #define ABILITY Ability
+#define ABILITIES Abilities{}
 #define ACTION false?[](Pokemon& p1, Pokemon& p2)->void{}
 #define START [](Pokemon& attacker, Pokemon& deffender)->void{
 #define END }
@@ -100,6 +102,13 @@ std::string GET_TYPE(Pokemon pokemon) { return pokemon.getType(); }
 int GET_HP(Pokemon pokemon) { return pokemon.getHealthPoints(); }
 bool IS_IN_POKEBALL(Pokemon pokemon) { return pokemon.isInPokeball(); }
 
+class Pokemons{
+public:
+    Pokemons(){}
+    template<typename... Args> 
+    void operator[](Args... args){}    
+};
+
 class Ability {
 private:
     std::string name;
@@ -118,6 +127,13 @@ public:
 };
 
 std::map<std::string, Ability*> Ability::abilities;
+
+class Abilities {
+public:
+    Abilities(){}
+    template<typename... Args> 
+    void operator[](Args... args){} 
+};
 
 template<typename... Args>
 bool AND(bool arg1,bool arg2,Args... args){
