@@ -52,6 +52,15 @@ public:
 
     void takeDamage(int damage_points) { health_points -= damage_points; }
 
+    static void printPokemons() {
+        cout END_LINE
+        SHOW "select pokemom :" END_LINE
+        SHOW "--------------------------" END_LINE
+        for (auto pair = pokemons.begin(); pair != pokemons.end(); ++pair) cout << pair->first END_LINE
+        SHOW "--------------------------" END_LINE
+        cout END_LINE
+    }
+
     void printAbilities() { 
         std::vector<std::string> abs = abilities[name];
         cout END_LINE
