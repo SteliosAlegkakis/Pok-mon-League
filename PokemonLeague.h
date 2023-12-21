@@ -102,3 +102,19 @@ public:
 };
 
 std::map<std::string, Ability*> Ability::abilities;
+
+template<typename... Args>
+bool AND(Args... args){
+    bool result = ((args == false) || ...);
+    return !result;
+}
+
+template<typename... Args>
+bool OR(Args... args){
+    bool result = ((args == true) || ...);
+    return result;
+}
+
+bool NOT(bool argument){
+    return !argument;
+}
