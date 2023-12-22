@@ -22,16 +22,18 @@ using namespace std;
 #define ABILITY Ability
 #define ABILITIES Abilities{}
 #define ACTION false?[](Pokemon& p1, Pokemon& p2)->void{}
-#define START [](Pokemon& attacker, Pokemon& deffender)->void{
+#define START [](Pokemon& attacker, Pokemon& defender)->void{
 #define END }
 #define ABILITY_NAME(ability_name) #ability_name" "
-#define ATTACKER attacker
-#define DEFFENDER deffender
+#define ATTACKER attacker,
+#define DEFENDER defender,
 #define IF if(
 #define DO ){
 #define ELSE_IF }else if(
 #define ELSE }else{
-#define END }
+#define HEAL ;Heal(),
+#define DAMAGE ;Damage(),
+
 
 class Pokemon {
 private:
@@ -39,6 +41,7 @@ private:
     std::string type;
     int health_points;
     bool inPokeball = false;
+    int heal_damage = 0;
     static std::map<std::string,std::vector<std::string>> abilities;
     static std::map<std::string, Pokemon*> pokemons;
 
@@ -53,11 +56,13 @@ public:
     std::string getType() { return this->type; }
     int getHealthPoints() { return this->health_points; }
     bool isInPokeball() { return this-> inPokeball; }
+    void setHealDamage(int value) { this->heal_damage = value; }
 
     static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
     static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
 
-    void takeDamage(int damage_points) { health_points -= damage_points; }
+    void damage(int damage_points) { health_points -= damage_points; }
+    void heal(int heal_points) { health_points += heal_points; }
 
     static void printPokemons() {
         cout END_LINE
@@ -97,6 +102,10 @@ public:
 
         abilities[name] = abilities_vector;
     }
+
+    void operator,(const int& _hp){
+        this->heal_damage == 1?damage(_hp):heal(_hp);
+    }
 };
 
 std::map<std::string, Pokemon*> Pokemon::pokemons;
@@ -111,7 +120,25 @@ class Pokemons{
 public:
     Pokemons(){}
     template<typename... Args> 
-    void operator[](Args... args){}    
+    void operator[](Args... args){}   
+};
+
+class Heal{
+public:
+    Heal(){}
+    Pokemon& operator,(Pokemon& pokemon){
+        pokemon.setHealDamage(0);
+        return pokemon;
+    }
+};
+
+class Damage{
+public:
+    Damage(){}
+    Pokemon& operator,(Pokemon& pokemon){ 
+        pokemon.setHealDamage(1);
+        return pokemon; 
+    }
 };
 
 class Ability {
