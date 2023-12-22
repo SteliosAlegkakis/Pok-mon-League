@@ -27,6 +27,11 @@ using namespace std;
 #define ABILITY_NAME(ability_name) #ability_name" "
 #define ATTACKER attacker
 #define DEFFENDER deffender
+#define IF if(
+#define DO ){
+#define ELSE_IF }else if(
+#define ELSE }else{
+#define END }
 
 class Pokemon {
 private:
