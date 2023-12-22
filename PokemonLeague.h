@@ -23,16 +23,20 @@ using namespace std;
 #define ABILITIES Abilities{}
 #define ACTION false?[](Pokemon& p1, Pokemon& p2)->void{}
 #define START [](Pokemon& attacker, Pokemon& defender)->void{
-#define END }
+#define END ;}
 #define ABILITY_NAME(ability_name) #ability_name" "
 #define ATTACKER attacker,
 #define DEFENDER defender,
 #define IF if(
 #define DO ){
-#define ELSE_IF }else if(
-#define ELSE }else{
+#define ELSE_IF ;}else if(
+#define ELSE ;}else{
 #define HEAL ;Heal(),
 #define DAMAGE ;Damage(),
+#define GET_NAME(pokemon) getName(pokemon 0)
+#define GET_HP(pokemon) getHp(pokemon 0)
+#define GET_TYPE(pokemon) getType(pokemon 0)
+#define IS_IN_POKEBALL(pokemon) isInPokeball(pokemon 0)
 
 
 class Pokemon {
@@ -111,10 +115,10 @@ public:
 std::map<std::string, Pokemon*> Pokemon::pokemons;
 std::map<std::string, std::vector<std::string>> Pokemon::abilities;
 
-std::string GET_NAME(Pokemon pokemon) { return pokemon.getName(); }
-std::string GET_TYPE(Pokemon pokemon) { return pokemon.getType(); }
-int GET_HP(Pokemon pokemon) { return pokemon.getHealthPoints(); }
-bool IS_IN_POKEBALL(Pokemon pokemon) { return pokemon.isInPokeball(); }
+std::string getName(Pokemon pokemon,int foo) { return pokemon.getName(); }
+std::string getType(Pokemon pokemon,int foo) { return pokemon.getType(); }
+int getHp(Pokemon pokemon,int foo) { return pokemon.getHealthPoints(); }
+bool isInPokeball(Pokemon pokemon,int foo) { return pokemon.isInPokeball(); }
 
 class Pokemons{
 public:

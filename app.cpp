@@ -3,7 +3,7 @@
 BEGIN_GAME
 
 CREATE POKEMON {
-    NAME : "pikatchu",
+    NAME : "pikachu",
     TYPE : "electric",
     HP : 120
 }
@@ -14,27 +14,19 @@ CREATE POKEMON {
     HP : 120
 }
 
-// CREATE POKEMONS [
-//     POKEMON{
-//         NAME : "squirtle"
-//         TYPE : "water"
-//         HP : 120
-//     },
-//     POKEMON{
-//         NAME: "Ho Oh",
-//         TYPE: "Fire",
-//         HP: 120
-//     },
-// ]
-
-CREATE POKEMONS[
-    POKEMON{
+CREATE POKEMONS [
+    POKEMON {
         NAME : "squirtle",
         TYPE : "water",
         HP : 120
     },
-    POKEMON{
+    POKEMON {
         NAME : "Ho oh",
+        TYPE : "fire",
+        HP : 120
+    },
+    POKEMON {
+        NAME : "charmander",
         TYPE : "fire",
         HP : 120
     }
@@ -43,7 +35,14 @@ CREATE POKEMONS[
 CREATE ABILITY {
     NAME : "electric_shock",
     ACTION : START 
-        deffender.takeDamage(20);
+        IF GET_HP(DEFENDER) == 120 DO
+            DAMAGE DEFENDER 20
+        ELSE_IF GET_HP(DEFENDER) == 100 DO
+            HEAL ATTACKER 20
+            DAMAGE DEFENDER 10
+        ELSE
+            DAMAGE DEFENDER 5
+        END
     END
 }
 
@@ -59,34 +58,40 @@ CREATE ABILITIES [
         ACTION : START 
             SHOW "slash" END_LINE
         END
+    },
+    ABILITY {
+        NAME : "blaze",
+        ACTION : START
+            SHOW "blaze" END_LINE
+        END
     }
 ]
 
 ;Pokemon::printPokemons();
 
-;Pokemon pikatchu = Pokemon::getPokemon("pikatchu");
-DEAR "pikatchu" LEARN [
+DEAR "pikachu" LEARN [
     ABILITY_NAME(electric_shock)
-    ABILITY_NAME(thunderbolt)
-    ABILITY_NAME(shockwave)
-];
-pikatchu.printAbilities();
+    ABILITY_NAME(bite)
+    ABILITY_NAME(slash)
+]
+;Pokemon::getPokemon("pikachu").printAbilities();
 
-Pokemon charizard{"charizard","fire",240};
-DEAR "charizard" LEARN [
-    ABILITY_NAME(fireball)
+DEAR "charmander" LEARN [
+    ABILITY_NAME(blaze)
     ABILITY_NAME(slash)
     ABILITY_NAME(bite)
-];
-charizard.printAbilities();
+]
 
-Ability::getAbility("electric_shock").execute(pikatchu,charizard);
-charizard.printStatus();
-pikatchu.printStatus();
-
-SHOW GET_HP(pikatchu) END_LINE
-SHOW GET_NAME(pikatchu) END_LINE
-SHOW GET_TYPE(pikatchu) END_LINE
-SHOW IS_IN_POKEBALL(pikatchu) END_LINE
+;Pokemon charmander = Pokemon::getPokemon("charmander");
+Pokemon pikachu = Pokemon::getPokemon("pikachu");
+Ability::getAbility("electric_shock").execute(pikachu,charmander);
+charmander.printStatus();
+pikachu.printStatus();
+Ability::getAbility("electric_shock").execute(pikachu,charmander);
+charmander.printStatus();
+pikachu.printStatus();
+Ability::getAbility("electric_shock").execute(pikachu,charmander);
+charmander.printStatus();
+pikachu.printStatus();
 
 END_GAME
