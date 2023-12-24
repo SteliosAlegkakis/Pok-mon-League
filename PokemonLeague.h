@@ -4,6 +4,7 @@
 #include <map>
 #include <functional>
 #include <sstream>
+#include <cmath>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ using namespace std;
 #define ELSE_IF ;}else if(
 #define ELSE ;}else{
 #define HEAL ;Heal(),
-#define DAMAGE ;Damage(),
+#define DAMAGE ;Damage(attacker.getType()),
 #define GET_NAME(pokemon) getName(pokemon 0)
 #define GET_HP(pokemon) getHp(pokemon 0)
 #define GET_TYPE(pokemon) getType(pokemon 0)
@@ -46,16 +47,20 @@ private:
     std::string name;
     std::string type;
     int health_points;
+    int max_health;
     bool inPokeball = false;
     int heal_damage = 0;
+    std::string attacker_type = "";
     static std::map<std::string,std::vector<std::string>> abilities;
     static std::map<std::string, Pokemon*> pokemons;
+    static int round;
 
 public:
     Pokemon(std::string _name ,std::string _type, int _health_points){
         name = _name;
         type = _type;
         health_points = _health_points;
+        max_health = _health_points;
         pokemons[_name] = this;
     }
     std::string getName() { return this->name; }
@@ -63,11 +68,28 @@ public:
     int getHealthPoints() { return this->health_points; }
     bool isInPokeball() { return this-> inPokeball; }
     void setHealDamage(int value) { this->heal_damage = value; }
+    void setAttackerType(std::string _attacker_type) { this->attacker_type = _attacker_type; }
 
     static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
     static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
 
-    void damage(int damage_points) { health_points -= damage_points; }
+    void damage(int damage_points) {
+        if(type == "Electric"){
+            if(attacker_type == "Fire") damage_points -= damage_points*0.3;
+            else  damage_points -= damage_points*0.2;
+        }
+        else if(type == "Water") damage_points -= damage_points*0.07; 
+
+        if(attacker_type == "Fire"){
+            if(type == "Electric") damage_points += damage_points*0.2;
+            else damage_points += damage_points*0.15;
+        }
+        else if(attacker_type == "Water") damage_points += damage_points*0.07;
+        else if(attacker_type == "Grass") if(round%2!=0) damage_points += damage_points*0.07;
+
+        health_points -= damage_points;
+    }
+
     void heal(int heal_points) { health_points += heal_points; }
 
     static void printPokemons() {
@@ -116,6 +138,7 @@ public:
 
 std::map<std::string, Pokemon*> Pokemon::pokemons;
 std::map<std::string, std::vector<std::string>> Pokemon::abilities;
+int Pokemon::round = 1;
 
 std::string getName(Pokemon pokemon,int foo) { return pokemon.getName(); }
 std::string getType(Pokemon pokemon,int foo) { return pokemon.getType(); }
@@ -139,10 +162,13 @@ public:
 };
 
 class Damage{
+private:
+    std::string attacker_type;
 public:
-    Damage(){}
+    Damage(std::string _attacker_type){ attacker_type = _attacker_type; }
     Pokemon& operator,(Pokemon& pokemon){ 
         pokemon.setHealDamage(_damage);
+        pokemon.setAttackerType(attacker_type);
         return pokemon; 
     }
 };
