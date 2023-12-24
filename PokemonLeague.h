@@ -37,6 +37,8 @@ using namespace std;
 #define GET_HP(pokemon) getHp(pokemon 0)
 #define GET_TYPE(pokemon) getType(pokemon 0)
 #define IS_IN_POKEBALL(pokemon) isInPokeball(pokemon 0)
+#define _heal 0
+#define _damage 1
 
 
 class Pokemon {
@@ -108,7 +110,7 @@ public:
     }
 
     void operator,(const int& _hp){
-        this->heal_damage == 1?damage(_hp):heal(_hp);
+        this->heal_damage == _damage?damage(_hp):heal(_hp);
     }
 };
 
@@ -131,7 +133,7 @@ class Heal{
 public:
     Heal(){}
     Pokemon& operator,(Pokemon& pokemon){
-        pokemon.setHealDamage(0);
+        pokemon.setHealDamage(_heal);
         return pokemon;
     }
 };
@@ -140,7 +142,7 @@ class Damage{
 public:
     Damage(){}
     Pokemon& operator,(Pokemon& pokemon){ 
-        pokemon.setHealDamage(1);
+        pokemon.setHealDamage(_damage);
         return pokemon; 
     }
 };
