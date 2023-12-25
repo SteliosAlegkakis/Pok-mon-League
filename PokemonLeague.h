@@ -1,10 +1,9 @@
-#include <vector>
+﻿#include <vector>
 #include <string>
 #include <iostream>
 #include <map>
 #include <functional>
 #include <sstream>
-#include <cmath>
 
 using namespace std;
 
@@ -40,7 +39,10 @@ using namespace std;
 #define IS_IN_POKEBALL(pokemon) isInPokeball(pokemon 0)
 #define _heal 0
 #define _damage 1
-
+#define DUEL ;duel();
+#define in true
+#define out false
+#define POKEBALL ;
 
 class Pokemon {
 private:
@@ -48,13 +50,13 @@ private:
     std::string type;
     int health_points;
     int max_health;
-    bool inPokeball = false;
+    bool inPokeball = out;
+    std::string owner;
     int heal_damage = 0;
     std::string attacker_type = "";
     static std::map<std::string,std::vector<std::string>> abilities;
     static std::map<std::string, Pokemon*> pokemons;
     static int round;
-
 public:
     Pokemon(std::string _name ,std::string _type, int _health_points){
         name = _name;
@@ -69,9 +71,18 @@ public:
     bool isInPokeball() { return this-> inPokeball; }
     void setHealDamage(int value) { this->heal_damage = value; }
     void setAttackerType(std::string _attacker_type) { this->attacker_type = _attacker_type; }
+    void setOwner(std::string _owner) { this->owner = _owner; }
+    std::string getOwner() {return owner;}
 
     static const std::map<std::string, Pokemon*> getPokemons() { return pokemons; }
     static Pokemon getPokemon(std::string pokemon_name) { return *pokemons[pokemon_name]; }
+    static void incrementRound() { 
+        round++;
+        SHOW "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" END_LINE
+        SHOW "Round " << round END_LINE 
+        SHOW "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" END_LINE
+    }
+    static int getRound() { return round; }
 
     void damage(int damage_points) {
         if(type == "Electric"){
@@ -93,22 +104,16 @@ public:
     void heal(int heal_points) { health_points += heal_points; }
 
     static void printPokemons() {
-        cout END_LINE
-        SHOW "select pokemom :" END_LINE
         SHOW "--------------------------" END_LINE
         for (auto pair = pokemons.begin(); pair != pokemons.end(); ++pair) cout << pair->first END_LINE
         SHOW "--------------------------" END_LINE
-        cout END_LINE
     }
 
     void printAbilities() { 
         std::vector<std::string> abs = abilities[name];
-        cout END_LINE
-        SHOW name << " select ability :" END_LINE
         SHOW "--------------------------" END_LINE
         for(int i=0;i<abs.size();i++) cout << abs.at(i) END_LINE
         SHOW "--------------------------" END_LINE
-        cout END_LINE
     }
 
     void printStatus() {
@@ -131,14 +136,14 @@ public:
         abilities[name] = abilities_vector;
     }
 
-    void operator,(const int& _hp){
-        this->heal_damage == _damage?damage(_hp):heal(_hp);
+    void operator,(const int& hp){
+        this->heal_damage == _damage?damage(hp):heal(hp);
     }
 };
 
 std::map<std::string, Pokemon*> Pokemon::pokemons;
 std::map<std::string, std::vector<std::string>> Pokemon::abilities;
-int Pokemon::round = 1;
+int Pokemon::round = 0;
 
 std::string getName(Pokemon pokemon,int foo) { return pokemon.getName(); }
 std::string getType(Pokemon pokemon,int foo) { return pokemon.getType(); }
@@ -215,4 +220,48 @@ bool OR(bool arg1,bool arg2,Args... args){
 
 bool NOT(bool argument){
     return !argument;
+}
+
+Pokemon selectPokemon(std::string player_name){
+    SHOW player_name << " select pokemon: " END_LINE
+    Pokemon::printPokemons();
+    std::string pokemon_name;
+    std:getline(cin,pokemon_name);
+    SHOW "\n";
+    Pokemon pokemon = Pokemon::getPokemon(pokemon_name);
+    pokemon.setOwner(player_name);
+    return pokemon;
+}
+
+std::string selectAbility(Pokemon pokemon){
+    SHOW "\n";
+    SHOW pokemon.getName() << "(" << pokemon.getOwner() << ") select ability:" END_LINE
+    pokemon.printAbilities();
+    std::string ability;
+    getline(cin,ability);
+    return ability; 
+}
+
+void printStatus(Pokemon p1,Pokemon p2){
+    p1.printStatus();
+    p2.printStatus();
+}
+
+void duel(){
+    SHOW "\n";
+    SHOW "----------------------------- POKEMON THE GAME --------------------------------" END_LINE
+    SHOW "\n";
+    
+    Pokemon player_1 = selectPokemon("Player 1");
+    Pokemon player_2 = selectPokemon("Player 2");
+
+    while(player_1.getHealthPoints()>0 && player_2.getHealthPoints()>0){
+        Pokemon::incrementRound();
+        Ability::getAbility(selectAbility(player_1)).execute(player_1,player_2);
+        printStatus(player_1,player_2);
+        Ability::getAbility(selectAbility(player_2)).execute(player_2,player_1);
+        printStatus(player_1,player_2);
+    }
+
+    player_1.getHealthPoints()<=0?cout<<"player 2 won":cout<<"player 1 won";
 }
