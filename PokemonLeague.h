@@ -247,11 +247,15 @@ void printStatus(Pokemon p1,Pokemon p2){
     p2.printStatus();
 }
 
+bool isGameFinished(Pokemon p1,Pokemon p2){
+    return (p1.getHealthPoints() <= 0 || p2.getHealthPoints() <= 0);
+}
+
 void duel(){
     SHOW "\n";
     SHOW "----------------------------- POKEMON THE GAME --------------------------------" END_LINE
     SHOW "\n";
-    
+
     Pokemon player_1 = selectPokemon("Player 1");
     Pokemon player_2 = selectPokemon("Player 2");
 
@@ -259,9 +263,11 @@ void duel(){
         Pokemon::incrementRound();
         Ability::getAbility(selectAbility(player_1)).execute(player_1,player_2);
         printStatus(player_1,player_2);
+        if(isGameFinished(player_1,player_2)) break;
         Ability::getAbility(selectAbility(player_2)).execute(player_2,player_1);
         printStatus(player_1,player_2);
+        if(isGameFinished(player_1,player_2)) break;
     }
 
-    player_1.getHealthPoints()<=0?cout<<"player 2 won":cout<<"player 1 won";
+    player_1.getHealthPoints()<=0?cout<<"\nplayer 2 won":cout<<"\nplayer 1 won";
 }
