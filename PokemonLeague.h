@@ -251,6 +251,16 @@ bool isGameFinished(Pokemon p1,Pokemon p2){
     return (p1.getHealthPoints() <= 0 || p2.getHealthPoints() <= 0);
 }
 
+bool play(Pokemon &attacker,Pokemon &defender){
+    if(!attacker.isInPokeball()) {
+        Ability::getAbility(selectAbility(attacker)).execute(attacker,defender);
+        printStatus(attacker,defender);
+    } else {
+        SHOW "\n" << attacker.getName() << "(" << attacker.getOwner() <<") has not a pokemon out of pokeball so he can't cast an ability" END_LINE
+    }
+    return isGameFinished(attacker,defender);
+}
+
 void duel(){
     SHOW "\n";
     SHOW "----------------------------- POKEMON THE GAME --------------------------------" END_LINE
@@ -259,15 +269,11 @@ void duel(){
     Pokemon player_1 = selectPokemon("Player 1");
     Pokemon player_2 = selectPokemon("Player 2");
 
-    while(player_1.getHealthPoints()>0 && player_2.getHealthPoints()>0){
+    while(true){
         Pokemon::incrementRound();
-        Ability::getAbility(selectAbility(player_1)).execute(player_1,player_2);
-        printStatus(player_1,player_2);
-        if(isGameFinished(player_1,player_2)) break;
-        Ability::getAbility(selectAbility(player_2)).execute(player_2,player_1);
-        printStatus(player_1,player_2);
-        if(isGameFinished(player_1,player_2)) break;
+        if(play(player_1,player_2)) break;
+        if(play(player_2,player_1)) break;
     }
 
-    player_1.getHealthPoints()<=0?cout<<"\nplayer 2 won":cout<<"\nplayer 1 won";
+    player_1.getHealthPoints()<=0?cout<<"\nPlayer 2 won":cout<<"\nPlayer 1 won";
 }
