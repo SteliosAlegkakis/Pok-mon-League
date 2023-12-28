@@ -43,6 +43,9 @@ using namespace std;
 #define in true
 #define out false
 #define POKEBALL ;
+#define _ -1
+#define _1 -2
+#define α -Pokeball()
 
 class Pokemon {
 private:
@@ -100,6 +103,7 @@ public:
         else if(attacker_type == "Grass") if(round%2!=0) damage_points += damage_points*0.07;
 
         health_points -= damage_points;
+        if(health_points < 0) health_points = 0;
     }
 
     void heal(int heal_points) { health_points += heal_points; }
@@ -138,7 +142,10 @@ public:
     }
 
     void operator,(const int& hp){
-        this->heal_damage == _damage?damage(hp):heal(hp);
+        SHOW hp END_LINE
+        if(hp == -1) this->inPokeball = out;
+        else if(hp == -2) this->inPokeball = in;
+        else this->heal_damage == _damage?damage(hp):heal(hp);
     }
 };
 
@@ -177,6 +184,13 @@ public:
         pokemon.setAttackerType(attacker_type);
         return pokemon; 
     }
+};
+
+class Pokeball {
+public:
+    Pokeball(){}
+    Pokeball operator-(){ return *this; }
+    int operator--() {return -2;}
 };
 
 class Ability {
