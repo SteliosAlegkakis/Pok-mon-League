@@ -46,6 +46,33 @@ using namespace std;
 #define _ -1
 #define _1 -2
 #define α Pokeball()
+class Pokemon;
+
+class Ability {
+private:
+    std::string name;
+    std::function<void(Pokemon&, Pokemon&)> action;
+    static std::map<std::string, Ability*> abilities;
+public:
+    using FunctionType = std::function<void(Pokemon&, Pokemon&)>;
+    Ability(std::string _name, FunctionType _action) {
+        name = _name;
+        action = _action;
+        abilities[_name] = this;
+    }
+    void execute(Pokemon& attacker, Pokemon& deffender){ action(attacker,deffender); }
+    static const std::map<std::string, Ability*> getAbilities() { return abilities; }
+    static Ability getAbility(std::string ability_name) { return *abilities[ability_name]; }
+};
+
+std::map<std::string, Ability*> Ability::abilities;
+
+class Abilities {
+public:
+    Abilities(){}
+    template<typename... Args> 
+    void operator[](Args... args){} 
+};
 
 class Pokemon {
 private:
@@ -112,6 +139,14 @@ public:
         SHOW "--------------------------" END_LINE
         for (auto pair = pokemons.begin(); pair != pokemons.end(); ++pair) cout << pair->first END_LINE
         SHOW "--------------------------" END_LINE
+    }
+
+     void executeAbility(std::string ability_name,Pokemon& defender){
+        std::vector<std::string> ablts = abilities[name];
+        for(int i=0;i<ablts.size();i++) 
+            if( ablts.at(i) == ability_name ) {
+                Ability::getAbility(ability_name).execute(*this,defender);
+            }
     }
 
     void printAbilities() { 
@@ -192,32 +227,6 @@ public:
     int operator--() {return -2;}
 };
 
-class Ability {
-private:
-    std::string name;
-    std::function<void(Pokemon&, Pokemon&)> action;
-    static std::map<std::string, Ability*> abilities;
-public:
-    using FunctionType = std::function<void(Pokemon&, Pokemon&)>;
-    Ability(std::string _name, FunctionType _action) {
-        name = _name;
-        action = _action;
-        abilities[_name] = this;
-    }
-    void execute(Pokemon& attacker, Pokemon& deffender){ action(attacker,deffender); }
-    static const std::map<std::string, Ability*> getAbilities() { return abilities; }
-    static Ability getAbility(std::string ability_name) { return *abilities[ability_name]; }
-};
-
-std::map<std::string, Ability*> Ability::abilities;
-
-class Abilities {
-public:
-    Abilities(){}
-    template<typename... Args> 
-    void operator[](Args... args){} 
-};
-
 template<typename... Args>
 bool AND(bool arg1,bool arg2,Args... args){
     if(!arg1 || !arg2) return false;
@@ -268,7 +277,7 @@ bool isGameFinished(Pokemon p1,Pokemon p2){
 bool play(Pokemon &attacker,Pokemon &defender){
     if(attacker.getType() == "Grass" && Pokemon::getRound()%2 != 0) attacker.heal(attacker.getMaxHealth()*0.07);
     if(!attacker.isInPokeball()) {
-        Ability::getAbility(selectAbility(attacker)).execute(attacker,defender);
+        attacker.executeAbility(selectAbility(attacker),defender);
         printStatus(attacker,defender);
     } else {
         SHOW "\n" << attacker.getName() << "(" << attacker.getOwner() <<") has not a pokemon out of pokeball so he can't cast an ability" END_LINE
