@@ -68,6 +68,7 @@ public:
     std::string getName() { return this->name; }
     std::string getType() { return this->type; }
     int getHealthPoints() { return this->health_points; }
+    int getMaxHealth() { return this->max_health; } 
     bool isInPokeball() { return this-> inPokeball; }
     void setHealDamage(int value) { this->heal_damage = value; }
     void setAttackerType(std::string _attacker_type) { this->attacker_type = _attacker_type; }
@@ -252,6 +253,7 @@ bool isGameFinished(Pokemon p1,Pokemon p2){
 }
 
 bool play(Pokemon &attacker,Pokemon &defender){
+    if(attacker.getType() == "Grass" && Pokemon::getRound()%2 != 0) attacker.heal(attacker.getMaxHealth()*0.07);
     if(!attacker.isInPokeball()) {
         Ability::getAbility(selectAbility(attacker)).execute(attacker,defender);
         printStatus(attacker,defender);
