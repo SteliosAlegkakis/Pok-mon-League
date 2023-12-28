@@ -45,7 +45,7 @@ using namespace std;
 #define POKEBALL ;
 #define _ -1
 #define _1 -2
-#define α -Pokeball()
+#define α Pokeball()
 
 class Pokemon {
 private:
@@ -142,7 +142,6 @@ public:
     }
 
     void operator,(const int& hp){
-        SHOW hp END_LINE
         if(hp == -1) this->inPokeball = out;
         else if(hp == -2) this->inPokeball = in;
         else this->heal_damage == _damage?damage(hp):heal(hp);
