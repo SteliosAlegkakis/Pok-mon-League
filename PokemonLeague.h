@@ -275,7 +275,6 @@ bool isGameFinished(Pokemon p1,Pokemon p2){
 }
 
 bool play(Pokemon &attacker,Pokemon &defender){
-    if(attacker.getType() == "Grass" && Pokemon::getRound()%2 != 0) attacker.heal(attacker.getMaxHealth()*0.07);
     if(!attacker.isInPokeball()) {
         attacker.executeAbility(selectAbility(attacker),defender);
         printStatus(attacker,defender);
@@ -283,6 +282,11 @@ bool play(Pokemon &attacker,Pokemon &defender){
         SHOW "\n" << attacker.getName() << "(" << attacker.getOwner() <<") has not a pokemon out of pokeball so he can't cast an ability" END_LINE
     }
     return isGameFinished(attacker,defender);
+}
+
+void healGrassOnOddRounds(Pokemon& player_1,Pokemon& player_2){
+    if(player_1.getType() == "Grass" && Pokemon::getRound()%2 != 0) player_2.heal(player_1.getMaxHealth()*0.05);
+    if(player_2.getType() == "Grass" && Pokemon::getRound()%2 != 0) player_2.heal(player_2.getMaxHealth()*0.05);
 }
 
 void duel(){
@@ -295,6 +299,7 @@ void duel(){
 
     while(true){
         Pokemon::incrementRound();
+        healGrassOnOddRounds(player_1,player_2);
         if(play(player_1,player_2)) break;
         if(play(player_2,player_1)) break;
     }
