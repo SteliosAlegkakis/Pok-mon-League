@@ -3,31 +3,25 @@
 BEGIN_GAME
 
 CREATE POKEMON {
-    NAME : "pikachu",
+    NAME : "Pikachu",
     TYPE : "Electric",
-    HP : 120
-}
-
-CREATE POKEMON {
-    NAME : "bulbasaur",
-    TYPE : "Grass",
     HP : 120
 }
 
 CREATE POKEMONS [
     POKEMON {
-        NAME : "squirtle",
+        NAME : "Squirtle",
         TYPE : "Water",
         HP : 120
     },
     POKEMON {
-        NAME : "Ho oh",
+        NAME : "Charmander",
         TYPE : "Fire",
         HP : 120
     },
     POKEMON {
-        NAME : "charmander",
-        TYPE : "Fire",
+        NAME : "Bulbasaur",
+        TYPE : "Grass",
         HP : 120
     }
 ]
@@ -35,13 +29,11 @@ CREATE POKEMONS [
 CREATE ABILITY {
     NAME : "electric_shock",
     ACTION : START 
-        IF GET_HP(DEFENDER) == 120 DO
-            DAMAGE DEFENDER 100
-        ELSE_IF GET_HP(DEFENDER) == 100 DO
-            HEAL ATTACKER 20
-            DAMAGE DEFENDER 10
-        ELSE
+        IF NOT(IS_IN_POKEBALL(DEFENDER)) DO
             DAMAGE DEFENDER 20
+            POKEBALL DEFENDER ---α
+        ELSE
+            POKEBALL DEFENDER _
         END
     END
 }
@@ -50,33 +42,52 @@ CREATE ABILITIES [
     ABILITY {
         NAME : "bite",
         ACTION : START 
-            SHOW "bite" END_LINE
+            IF AND(GET_HP(DEFENDER) >= 100,NOT(IS_IN_POKEBALL(DEFENDER))) DO
+                DAMAGE DEFENDER 20
+            ELSE
+                DAMAGE DEFENDER 10
+            END
         END
     },
     ABILITY {
         NAME : "slash",
         ACTION : START 
-            SHOW "slash" END_LINE
+            IF OR(GET_TYPE(ATTACKER) == "Fire",GET_TYPE(ATTACKER) == "Water") DO
+                DAMAGE DEFENDER 20
+            ELSE
+                DAMAGE DEFENDER 10
+            END
         END
     },
     ABILITY {
         NAME : "blaze",
         ACTION : START
-            SHOW "blaze" END_LINE
+            DAMAGE DEFENDER 30
+            HEAL ATTACKER 20
         END
     }
 ]
 
-DEAR "pikachu" LEARN [
+DEAR "Pikachu" LEARN [
     ABILITY_NAME(electric_shock)
     ABILITY_NAME(bite)
     ABILITY_NAME(slash)
 ]
 
-DEAR "charmander" LEARN [
+DEAR "Charmander" LEARN [
     ABILITY_NAME(blaze)
     ABILITY_NAME(slash)
     ABILITY_NAME(bite)
+]
+
+DEAR "Bulbasaur" LEARN [
+    ABILITY_NAME(bite)
+    ABILITY_NAME(slash)
+]
+
+DEAR "Squirtle" LEARN [
+    ABILITY_NAME(bite)
+    ABILITY_NAME(slash)
 ]
 
 DUEL
