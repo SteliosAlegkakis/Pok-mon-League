@@ -304,5 +304,7 @@ void duel(){
         if(play(player_2,player_1)) break;
     }
 
-    player_1.getHealthPoints()<=0?cout<<"\nPlayer 2 won":cout<<"\nPlayer 1 won";
+    player_1.getHealthPoints()<=0?
+        cout<<"\n" << player_2.getName() << "(Player 2) won":
+        cout<<"\n" << player_1.getName() << "(Player 1) won";
 }
