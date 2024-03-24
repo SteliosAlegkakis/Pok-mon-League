@@ -141,6 +141,12 @@ public:
         SHOW "--------------------------" END_LINE
     }
 
+    static int pokemonExists(std::string pokemon_name) {
+        for(auto pair = pokemons.begin(); pair != pokemons.end(); ++pair) 
+            if(pair->first == pokemon_name) return 1;
+        return 0;
+    }
+
      void executeAbility(std::string ability_name,Pokemon& defender){
         std::vector<std::string> ablts = abilities[name];
         for(int i=0;i<ablts.size();i++) 
@@ -246,11 +252,18 @@ bool NOT(bool argument){
 }
 
 Pokemon selectPokemon(std::string player_name){
-    SHOW player_name << " select pokemon: " END_LINE
-    Pokemon::printPokemons();
-    std::string pokemon_name;
-    std:getline(cin,pokemon_name);
-    SHOW "\n";
+    std::string pokemon_name = "";
+    while(!Pokemon::pokemonExists(pokemon_name)){
+        SHOW player_name << " select pokemon: " END_LINE
+        Pokemon::printPokemons();
+        std:getline(cin,pokemon_name);
+        SHOW "\n";
+    }
+    // SHOW player_name << " select pokemon: " END_LINE
+    // Pokemon::printPokemons();
+    // std::string pokemon_name;
+    // std:getline(cin,pokemon_name);
+    // SHOW "\n";
     Pokemon pokemon = Pokemon::getPokemon(pokemon_name);
     pokemon.setOwner(player_name);
     return pokemon;
