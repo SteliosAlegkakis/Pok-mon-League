@@ -259,11 +259,6 @@ Pokemon selectPokemon(std::string player_name){
         std:getline(cin,pokemon_name);
         SHOW "\n";
     }
-    // SHOW player_name << " select pokemon: " END_LINE
-    // Pokemon::printPokemons();
-    // std::string pokemon_name;
-    // std:getline(cin,pokemon_name);
-    // SHOW "\n";
     Pokemon pokemon = Pokemon::getPokemon(pokemon_name);
     pokemon.setOwner(player_name);
     return pokemon;
